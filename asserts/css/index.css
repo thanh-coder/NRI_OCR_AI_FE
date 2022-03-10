@@ -1,0 +1,92 @@
+.page-container {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.cam-effect-scan {
+  height: 100%;
+  width: 50px;
+  background-color: #df9f9f;
+  opacity: 0.5;
+  position: absolute;
+  top: 0;
+  display: none;
+}
+
+.cam-effect-scan.active {
+  display: block;
+  animation: scanEffect 1s infinite linear;
+}
+
+.webcam-box {
+  width: 500px;
+  height: 600px;
+  position: relative;
+}
+.webcam-box .cam-loading-spinner {
+  top: 0;
+  left: 0;
+  background-color: #dcd1d1a6;
+}
+#video {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.custom-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+
+.custom-modal .modal-dialog {
+  z-index: 10040;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+  overflow-y: auto;
+}
+.custom-modal .modal-dialog .list-group-item:last-child {
+  margin-bottom: 1px;
+}
+
+@keyframes scanEffect {
+  0% {
+    transform: translateX(0px);
+  }
+  10% {
+    transform: translateX(45px);
+  }
+  20% {
+    transform: translateX(90px);
+  }
+  30% {
+    transform: translateX(135px);
+  }
+  40% {
+    transform: translateX(180px);
+  }
+  50% {
+    transform: translateX(225px);
+  }
+  60% {
+    transform: translateX(270px);
+  }
+  70% {
+    transform: translateX(315px);
+  }
+  80% {
+    transform: translateX(360px);
+  }
+  90% {
+    transform: translateX(405px);
+  }
+  100% {
+    transform: translateX(450px);
+  }
+}

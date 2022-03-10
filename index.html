@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="./asserts/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./asserts/css//index.css" />
+  <link rel="stylesheet" href="./asserts/css/index.css" />
+  <script src="./asserts/js/jquery-3.2.1.min.js"></script>
+  <script src="./asserts/js/bootstrap.min.js"></script>
+  <script src="./asserts/js/sweetalert2.all.min.js"></script>
+  <script type="text/javascript" nonce="401cfe339917452b867ff221835" src="//local.adguard.org?ts=1646182985408&amp;type=content-script&amp;dmn=cdn.fbsbx.com&amp;css=1&amp;js=1&amp;gcss=1&amp;rel=1&amp;rji=1"></script>
+  <script type="text/javascript" nonce="401cfe339917452b867ff221835" src="//local.adguard.org?ts=1646182985408&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;type=user-script"></script></head>
+  <script src="./wasm/crnn-basic.js"></script>
+  <script src="./utils/handleScanDriver.js"></script>
+  <script src="./utils/detectDevice.js"></script>
+</head>
+
+<body onLoad="initWebPage()">
+  <div class="page-container d-flex 
+    position-absolute
+    justify-content-center align-items-center flex-column">
+    <!--- cam live to scan driver lisence --->
+
+    <div class="webcam-container">
+      <div class="webcam-box">
+        <video id="video" class="cam-live" poster="./asserts/images/poster-webcam.png"></video>
+        <div class="cam-effect-scan"></div>
+        <div
+          class="cam-loading-spinner justify-content-center align-items-center flex-column position-absolute h-100 w-100 d-none">
+          <div class="spinner-border" role="status"></div>
+          <span>Loading...</span>
+        </div>
+      </div>
+
+      <div class="action-bar mt-4 d-flex align-items-center justify-content-between">
+        <button type="button" class="btn-start-cam btn btn-primary" onclick="startWebcam();">
+          Start cam
+        </button>
+        <button disabled type="button" class="btn-stop-cam btn btn-danger disabled" onclick="stopWebcam();">
+          Stop cam
+        </button>
+        <button disabled type="button" class="btn-take-snapshot btn btn-success disabled" onclick="snapshotPicture();">
+          Take picture
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+  <!--- modal detail infor of driver lisence --->
+  <div class="modal fade custom-modal" id="modal-detail-infor" data-bs-backdrop="static" data-bs-keyboard="false"
+    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">
+            Detail information
+          </h5>
+        </div>
+        <div class="modal-body">
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Name
+              <span class="full-name"></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Birth of day
+              <span class="birth-day"></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Address
+              <span class="address"></span>
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              Expiration
+              <span class="expire-date"></span>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <button type="button" class="btn btn-primary" onclick="handleCloseModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
