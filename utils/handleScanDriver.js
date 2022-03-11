@@ -37,21 +37,18 @@ const startWebcam = () => {
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia;
 
-  navigator.getUserMedia(
-    constraints,
-    (localMediaStream) => {
+  navigator
+    .getUserMedia(constraints, (localMediaStream) => {
       video.srcObject = localMediaStream;
       webcamStream = localMediaStream;
       btnTakeSnapshotElm.classList.remove("disabled");
       btnStopCamElm.classList.remove("disabled");
       btnStopCamElm.disabled = false;
       btnTakeSnapshotElm.disabled = false;
-    },
-    (error) => {
+    }, (error) => {
       console.log("The following error occured: " + error);
-    }
-  );
-};
+    })
+}
 
 const stopWebcam = () => {
   webcamStream.getTracks().forEach((track) => {
@@ -68,8 +65,8 @@ const stopWebcam = () => {
 const initWebPage = () => {
   canvas = document.createElement("canvas");
   ctx = canvas.getContext("2d");
-  canvas1 = document.getElementById("myCanvas");
-  ctx1 = canvas1.getContext("2d");
+  // canvas1 = document.getElementById("myCanvas");
+  // ctx1 = canvas1.getContext("2d");
   canvas.width = 500;
   canvas.height = 600;
   btnTakeSnapshotElm = document.querySelector(".btn-take-snapshot");
@@ -224,3 +221,4 @@ const getDetailInforOfDriver = () => {
   driverBirthDayElm.innerText = payloadObject.birthOfDay || "";
   driverExpireDateElm.innerText = payloadObject.expireDate || "";
 };
+
