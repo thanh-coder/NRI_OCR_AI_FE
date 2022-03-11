@@ -1,6 +1,6 @@
 let video;
 let webcamStream;
-let canvas, ctx, canvas1, ctx1;
+let canvas, ctx;
 let modalDetailInfor;
 let btnStartCamElm;
 let btnStopCamElm;
@@ -17,7 +17,6 @@ let driverExpireDateElm;
 let driverBirthDayElm;
 let payloadObject = {};
 
-// document.addEventListener("DOMContentLoaded", initWebPage);
 const startWebcam = () => {
   const constraints = {
     audio: false,
@@ -77,8 +76,6 @@ const stopWebcam = () => {
 const initWebPage = () => {
   canvas = document.createElement("canvas");
   ctx = canvas.getContext("2d");
-  // canvas1 = document.getElementById("myCanvas");
-  // ctx1 = canvas1.getContext("2d");
   canvas.width = 500;
   canvas.height = 600;
   btnTakeSnapshotElm = document.querySelector(".btn-take-snapshot");
@@ -94,6 +91,8 @@ const initWebPage = () => {
   video.setAttribute("playsinline", "");
 };
 
+
+
 const snapshotPicture = () => {
   if (webcamStream) {
     btnStopCamElm.classList.add("disabled");
@@ -104,9 +103,6 @@ const snapshotPicture = () => {
     var img_h = video.videoHeight;
     canvas.width = img_w;
     canvas.height = img_h;
-    // canvas1.width = img_w;
-    // canvas1.height = img_h;
-    // ctx1.drawImage(video, 0, 0, img_w, img_h);
     ctx.drawImage(video, 0, 0, img_w, img_h);
     const imageData = ctx.getImageData(0, 0, img_w, img_h);
     const uint8ArrData = new Uint8Array(imageData.data);
@@ -136,11 +132,10 @@ const handleCloseModal = () => {
   modalDetailInfor.hide();
 };
 
-Module.onRuntimeInitialized = () => {};
 const passToWasm = (imageData, wid, hig) => {
   try {
     const { length } = imageData;
-    const memory = Module._malloc(length); // Allocating WASM memory
+    const memory = _malloc(length); // Allocating WASM memory
     HEAPU8.set(imageData, memory); // Copying JS image data to WASM memory
     let errorMessageAray = new Uint8Array(1000);
     let errorMessagePointer = _malloc(1000 * Uint8Array.BYTES_PER_ELEMENT);
@@ -175,16 +170,16 @@ const passToWasm = (imageData, wid, hig) => {
     payloadObject = JSON.parse(payloadString);
     resetEffectScanImg();
     if (payloadString && !errorMessageString) {
-    console.log("payloadString==============",payloadString);
       onSucess(payloadString);
     } else {
       onError();
     }
-    Module._free(memory); // Freeing WASM memory
-    Module._free(errorMessagePointer); // Freeing WASM memory
-    Module._free(payloadPointer); // Freeing WASM memory
+    _free(memory); // Freeing WASM memory
+    _free(errorMessagePointer); // Freeing WASM memory
+    _free(payloadPointer); // Freeing WASM memory
   } catch (error) {
-    console.log("error========", error);
+    resetEffectScanImg();
+    onError(error);
   }
 };
 
@@ -217,13 +212,14 @@ const onSucess = () => {
   });
 };
 
-const onError = () => {
+const onError = (content) => {
+  let messErr = content || "Something went wrong!";
   payloadObject = {};
   getDetailInforOfDriver();
   Swal.fire({
-    title: "Error",
-    icon: "Oops...",
-    text: "Something went wrong!",
+    title: "Error!",
+    icon: "error",
+    text: messErr,
     width: "400px",
   });
 };
