@@ -31,21 +31,33 @@ const startWebcam = () => {
         },
   };
 
-  navigator.getUserMedia =
-    navigator.getUserMedia ||
-    navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia ||
-    navigator.msGetUserMedia;
+  // navigator.getUserMedia =
+  //   navigator.getUserMedia ||
+  //   navigator.webkitGetUserMedia ||
+  //   navigator.mozGetUserMedia ||
+  //   navigator.msGetUserMedia;
 
-  navigator
-    .getUserMedia(constraints, (localMediaStream) => {
+  // navigator
+  //   .getUserMedia(constraints, (localMediaStream) => {
+  //     video.srcObject = localMediaStream;
+  //     webcamStream = localMediaStream;
+  //     btnTakeSnapshotElm.classList.remove("disabled");
+  //     btnStopCamElm.classList.remove("disabled");
+  //     btnStopCamElm.disabled = false;
+  //     btnTakeSnapshotElm.disabled = false;
+  //   }, (error) => {
+  //     console.log("The following error occured: " + error);
+  //   })
+
+    navigator.mediaDevices
+    .getUserMedia(constraints).then((localMediaStream) => {
       video.srcObject = localMediaStream;
       webcamStream = localMediaStream;
       btnTakeSnapshotElm.classList.remove("disabled");
       btnStopCamElm.classList.remove("disabled");
       btnStopCamElm.disabled = false;
       btnTakeSnapshotElm.disabled = false;
-    }, (error) => {
+    }).catch((error) => {
       console.log("The following error occured: " + error);
     })
 }
@@ -163,6 +175,7 @@ const passToWasm = (imageData, wid, hig) => {
     payloadObject = JSON.parse(payloadString);
     resetEffectScanImg();
     if (payloadString && !errorMessageString) {
+    console.log("payloadString==============",payloadString);
       onSucess(payloadString);
     } else {
       onError();
