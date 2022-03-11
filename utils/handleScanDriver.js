@@ -1,6 +1,6 @@
 let video;
 let webcamStream;
-let canvas, ctx;
+let  canvas, ctx, canvas1, ctx1;
 let modalDetailInfor;
 let btnStartCamElm;
 let btnStopCamElm;
@@ -36,19 +36,17 @@ const startWebcam = () => {
     navigator.mozGetUserMedia ||
     navigator.msGetUserMedia);
 
-  navigator.mediaDevices
-    .getUserMedia(constraints)
-    .then((localMediaStream) => {
+  navigator
+    .getUserMedia(constraints, (localMediaStream) => {
       video.srcObject = localMediaStream;
       webcamStream = localMediaStream;
       btnTakeSnapshotElm.classList.remove("disabled");
       btnStopCamElm.classList.remove("disabled");
       btnStopCamElm.disabled = false;
       btnTakeSnapshotElm.disabled = false;
+    }, (error) => {
+      console.log("The following error occured: " + error);
     })
-    .catch((error) => {
-      console.log("The following error occured: " + err);
-    });
 }
 
 const stopWebcam = () => {
@@ -66,6 +64,8 @@ const stopWebcam = () => {
 const initWebPage = () => {
   canvas = document.createElement("canvas");
   ctx = canvas.getContext("2d");
+  // canvas1 = document.getElementById("myCanvas");
+  // ctx1 = canvas1.getContext("2d");
   canvas.width = 500;
   canvas.height = 600;
   btnTakeSnapshotElm = document.querySelector(".btn-take-snapshot");
@@ -87,8 +87,10 @@ const snapshotPicture = () => {
     btnTakeSnapshotElm.classList.add("disabled");
     btnStopCamElm.disabled = true;
     btnTakeSnapshotElm.disabled = true;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.width);
+    // console.log(canvas1.width, canvas1.height);
+    const {width, height} = canvas;
+    ctx.drawImage(video, 0, 0, width, height);
+    const imageData = ctx.getImageData(0, 0, width, height);
     const uint8ArrData = new Uint8Array(imageData.data);
     scanVideoElm = document.querySelector(".cam-effect-scan");
     loadingSpinnerElm = document.querySelector(".cam-loading-spinner");
@@ -107,7 +109,7 @@ const snapshotPicture = () => {
       percenScan = 0;
     }, 1100)
     setTimeout(() => {
-      passToWasm(uint8ArrData, canvas.width, canvas.height);
+      passToWasm(uint8ArrData, width, height);
     }, 1200);
     
   }
@@ -117,6 +119,9 @@ const handleCloseModal = () => {
   modalDetailInfor.hide();
 };
 
+Module.onRuntimeInitialized = () => {
+
+}
 const passToWasm = (imageData, wid, hig) => {
   const { length } = imageData;
   const memory = Module._malloc(length); // Allocating WASM memory
@@ -209,3 +214,4 @@ const getDetailInforOfDriver = () => {
   driverBirthDayElm.innerText = payloadObject.birthOfDay || "";
   driverExpireDateElm.innerText = payloadObject.expireDate || "";
 };
+
